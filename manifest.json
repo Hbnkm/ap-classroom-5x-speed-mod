@@ -1,0 +1,1 @@
+{ "manifest_version": 3, "name": "AP Classroom 5x Speed", "version": "1.0", "description": "A Chrome extension to speed up AP Classroom videos to 5x.", "permissions": ["scripting", "activeTab"], "action": { "default_popup": "popup.html", "default_icon": "icon.png" }, "background": { "service_worker": "background.js" } }
