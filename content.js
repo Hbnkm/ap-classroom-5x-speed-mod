@@ -1,26 +1,27 @@
-// Inject speed modification into AP Classroom video player
-const script = document.createElement('script');
-script.textContent = `
-  // Override playback rate limits
-  const originalSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'playbackRate').set;
-  Object.defineProperty(HTMLMediaElement.prototype, 'playbackRate', {
-    set: function(rate) {
-      console.log('Setting playback rate to: ' + rate);
-      originalSetter.call(this, rate);
+// Simple speed modification - no inline scripts needed
+function initSpeedMod() {
+  // Listen for keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    const num = parseInt(e.key);
+    if (!isNaN(num) && num >= 0 && num <= 9) {
+      const videos = document.querySelectorAll('video');
+      videos.forEach(v => {
+        v.playbackRate = num;
+      });
+      console.log('Speed set to: ' + num + 'x');
     }
   });
 
-  // Add speed controls
-  function addSpeedControls() {
+  // Add 5x button
+  function addButton() {
     const videos = document.querySelectorAll('video');
     videos.forEach(video => {
-      if (!video.hasSpeedMod) {
-        video.hasSpeedMod = true;
+      if (!video.hasButton) {
+        video.hasButton = true;
         
-        // Create speed button
         const btn = document.createElement('button');
-        btn.textContent = '5x';
-        btn.style.cssText = 'position: fixed; bottom: 20px; right: 20px; padding: 10px 15px; background: #0078d4; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 10000; font-weight: bold;';
+        btn.textContent = '5x ⚡';
+        btn.style.cssText = 'position: fixed; bottom: 80px; right: 20px; padding: 10px 15px; background: #0078d4; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 10000; font-weight: bold; font-size: 14px;';
         
         btn.addEventListener('click', () => {
           video.playbackRate = 5;
@@ -32,18 +33,10 @@ script.textContent = `
     });
   }
 
-  setInterval(addSpeedControls, 1000);
-  addSpeedControls();
+  // Check for videos regularly
+  setInterval(addButton, 1000);
+  addButton();
+}
 
-  // Keyboard shortcuts: 0-9 for speeds
-  document.addEventListener('keydown', (e) => {
-    const num = parseInt(e.key);
-    if (!isNaN(num)) {
-      const videos = document.querySelectorAll('video');
-      videos.forEach(v => v.playbackRate = num);
-      console.log('Speed set to: ' + num + 'x');
-    }
-  });
-`;
-document.documentElement.appendChild(script);
-script.remove();
+// Start the mod
+initSpeedMod();
