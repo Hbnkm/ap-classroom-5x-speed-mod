@@ -1,42 +1,46 @@
-// Simple speed modification - no inline scripts needed
+// AP Classroom uses a custom player, not standard video tags
 function initSpeedMod() {
-  // Listen for keyboard shortcuts
+  console.log('AP Classroom Speed Mod initialized');
+
+  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     const num = parseInt(e.key);
     if (!isNaN(num) && num >= 0 && num <= 9) {
-      const videos = document.querySelectorAll('video');
-      videos.forEach(v => {
-        v.playbackRate = num;
-      });
+      setPlayerSpeed(num);
       console.log('Speed set to: ' + num + 'x');
     }
   });
-
-  // Add 5x button
-  function addButton() {
-    const videos = document.querySelectorAll('video');
-    videos.forEach(video => {
-      if (!video.hasButton) {
-        video.hasButton = true;
-        
-        const btn = document.createElement('button');
-        btn.textContent = '5x ⚡';
-        btn.style.cssText = 'position: fixed; bottom: 80px; right: 20px; padding: 10px 15px; background: #0078d4; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 10000; font-weight: bold; font-size: 14px;';
-        
-        btn.addEventListener('click', () => {
-          video.playbackRate = 5;
-          console.log('5x speed activated!');
-        });
-        
-        document.body.appendChild(btn);
-      }
-    });
-  }
-
-  // Check for videos regularly
-  setInterval(addButton, 1000);
-  addButton();
 }
 
-// Start the mod
+function setPlayerSpeed(speed) {
+  // Try different ways to access the player
+  
+  // Method 1: Look for video element in iframes
+  const iframes = document.querySelectorAll('iframe');
+  iframes.forEach(iframe => {
+    try {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      const video = iframeDoc.querySelector('video');
+      if (video) {
+        video.playbackRate = speed;
+        console.log('Set iframe video to ' + speed + 'x');
+      }
+    } catch (e) {
+      // Cross-origin, skip
+    }
+  });
+
+  // Method 2: Direct video elements
+  const videos = document.querySelectorAll('video');
+  videos.forEach(v => v.playbackRate = speed);
+
+  // Method 3: Look for player objects in window
+  if (window.player) {
+    window.player.playbackRate = speed;
+  }
+  if (window.videoPlayer) {
+    window.videoPlayer.playbackRate = speed;
+  }
+}
+
 initSpeedMod();
