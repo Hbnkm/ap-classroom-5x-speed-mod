@@ -1,1 +1,21 @@
-{ "manifest_version": 3, "name": "AP Classroom 5x Speed", "version": "1.0", "description": "A Chrome extension to speed up AP Classroom videos to 5x.", "permissions": ["scripting", "activeTab"], "action": { "default_popup": "popup.html", "default_icon": "icon.png" }, "background": { "service_worker": "background.js" } }
+{
+  "manifest_version": 3,
+  "name": "AP Classroom 5x Speed",
+  "version": "1.0.0",
+  "description": "Watch AP Classroom videos at 5x speed",
+  "permissions": ["scripting", "activeTab"],
+  "host_permissions": [
+    "*://*.apclassroom.collegeboard.org/*",
+    "*://*.collegeboard.org/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.apclassroom.collegeboard.org/*", "*://*.collegeboard.org/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AP Classroom 5x Speed"
+  }
+}
